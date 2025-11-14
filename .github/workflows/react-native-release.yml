@@ -50,7 +50,7 @@ jobs:
     - name: Upload AAB to Release (Play Store)
       uses: actions/upload-release-asset@v1
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.TOKEN }}
       with:
         upload_url: ${{ github.event.release.upload_url }}
         asset_path: ./android/app/build/outputs/bundle/release/app-release.aab
@@ -60,7 +60,7 @@ jobs:
     - name: Upload Release APK to Release
       uses: actions/upload-release-asset@v1
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.TOKEN }}
       with:
         upload_url: ${{ github.event.release.upload_url }}
         asset_path: ./android/app/build/outputs/apk/release/app-release.apk
@@ -70,7 +70,7 @@ jobs:
     - name: Upload Debug APK to Release
       uses: actions/upload-release-asset@v1
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.TOKEN }}
       with:
         upload_url: ${{ github.event.release.upload_url }}
         asset_path: ./android/app/build/outputs/apk/debug/app-debug.apk
