@@ -4,11 +4,11 @@ on:
   release:
     types: [published]
     workflow_dispatch: # ← Add this for manual trigger
-  push:
-    # branches:
-    #   - main
-    tags:
-      - "v*" # Trigger on version tags like v1.0.0
+  # push:
+  #   # branches:
+  #   #   - main
+  #   tags:
+  #     - "v*" # Trigger on version tags like v1.0.0
 
 env:
   NODE_VERSION: '22'
