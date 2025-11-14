@@ -1,0 +1,78 @@
+name: React Native Build & Release
+
+on:
+  release:
+    types: [published]
+
+env:
+  NODE_VERSION: '22'
+  JAVA_VERSION: '17'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Java
+      uses: actions/setup-java@v4
+      with:
+        java-version: ${{ env.JAVA_VERSION }}
+        distribution: 'temurin'
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Build Release AAB (Play Store)
+      run: |
+        cd android
+        chmod +x ./gradlew
+        ./gradlew bundleRelease
+
+    - name: Build Release APK (GitHub Assets)
+      run: |
+        cd android
+        ./gradlew assembleRelease
+
+    - name: Build Debug APK (Testing)
+      run: |
+        cd android
+        ./gradlew assembleDebug
+
+    - name: Upload AAB to Release (Play Store)
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ github.event.release.upload_url }}
+        asset_path: ./android/app/build/outputs/bundle/release/app-release.aab
+        asset_name: app-play-store-${{ github.event.release.tag_name }}.aab
+        asset_content_type: application/octet-stream
+
+    - name: Upload Release APK to Release
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ github.event.release.upload_url }}
+        asset_path: ./android/app/build/outputs/apk/release/app-release.apk
+        asset_name: app-release-${{ github.event.release.tag_name }}.apk
+        asset_content_type: application/vnd.android.package-archive
+
+    - name: Upload Debug APK to Release
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ github.event.release.upload_url }}
+        asset_path: ./android/app/build/outputs/apk/debug/app-debug.apk
+        asset_name: app-debug-${{ github.event.release.tag_name }}.apk
+        asset_content_type: application/vnd.android.package-archive
