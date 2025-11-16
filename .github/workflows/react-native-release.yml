@@ -4,11 +4,6 @@ on:
   release:
     types: [published]
     workflow_dispatch: # ← Add this for manual trigger
-  # push:
-  #   # branches:
-  #   #   - main
-  #   tags:
-  #     - "v*" # Trigger on version tags like v1.0.0
 
 env:
   NODE_VERSION: '22'
@@ -82,7 +77,3 @@ jobs:
         asset_path: ./android/app/build/outputs/apk/debug/app-debug.apk
         asset_name: app-debug-${{ github.event.release.tag_name }}.apk
         asset_content_type: application/vnd.android.package-archive
-
-
-# git tag v1.0.1
-# git push origin v1.0.1
